@@ -433,9 +433,6 @@
       "name": "group - 1"
     }
   ],
-  "fallbackResourceIds": [
-    "/subscriptions/57b9b795-cf3d-448d-b471-3a8aa05236bd/resourcegroups/rg-demo-sentinel-01/providers/microsoft.operationalinsights/workspaces/sentinel-demo-01"
-  ],
   "fromTemplateId": "sentinel-UserWorkbook",
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }
