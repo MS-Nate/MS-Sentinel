@@ -1,0 +1,441 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "132c882f-94c2-48d1-ac73-3f0163414d22",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "label": "⏱️ Time Range",
+            "type": 4,
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 900000
+                },
+                {
+                  "durationMs": 1800000
+                },
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ]
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": {
+              "durationMs": 1209600000
+            }
+          },
+          {
+            "id": "09c64daf-0778-4214-b376-b437e1481f61",
+            "version": "KqlParameterItem/1.0",
+            "name": "DataCollectionRule",
+            "label": "Data Collection Rule",
+            "type": 5,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.insights/datacollectionrules\"\r\n| project id",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "value": [
+              "value::all"
+            ]
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "<span style=\"font-size: 18px;\">**This workbook is for reviewing the health and efficiency of data collection rules in the environment.**</span>\r\n"
+      },
+      "name": "text - 2"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook0c519fae-f151-4f49-80cc-cbf5c0559c75",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.insights/datacollectionrules",
+              "metricScope": 0,
+              "resourceParameter": "DataCollectionRule",
+              "resourceIds": [
+                "{DataCollectionRule}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 43200000
+              },
+              "timeGrain": "PT15M",
+              "metrics": [
+                {
+                  "namespace": "microsoft.insights/datacollectionrules",
+                  "metric": "microsoft.insights/datacollectionrules--TransformationRuntime_DurationMs",
+                  "aggregation": 4,
+                  "columnName": "Data Collection Rule Transformation"
+                }
+              ],
+              "title": "DCR Transformation Time (Ms)",
+              "gridFormatType": 1,
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Name",
+                  "formatter": 13
+                },
+                "leftContent": {
+                  "columnMatch": "Value",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "mapSettings": {
+                "locInfo": "AzureResource",
+                "sizeSettings": "Data Collection Rule Transformation",
+                "sizeAggregation": "Sum",
+                "legendMetric": "Data Collection Rule Transformation",
+                "legendAggregation": "Sum",
+                "itemColorSettings": {
+                  "type": "heatmap",
+                  "colorAggregation": "Sum",
+                  "nodeColorField": "Data Collection Rule Transformation",
+                  "heatmapPalette": "greenRed"
+                },
+                "locInfoColumn": "Name"
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Subscription",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "Data Collection Rule Transformation",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource"
+                    }
+                  },
+                  {
+                    "columnMatch": "Metric",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Aggregation",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Value",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "Timeline",
+                    "formatter": 9
+                  }
+                ],
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "75",
+            "name": "metric - 0",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook28490a6a-01d2-4894-9c01-6177ba0805f1",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 0,
+              "resourceType": "microsoft.insights/datacollectionrules",
+              "metricScope": 0,
+              "resourceParameter": "DataCollectionRule",
+              "resourceIds": [
+                "{DataCollectionRule}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 43200000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.insights/datacollectionrules",
+                  "metric": "microsoft.insights/datacollectionrules--TransformationRuntime_DurationMs",
+                  "aggregation": 4
+                }
+              ],
+              "title": "Transformation Time",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.insights/datacollectionrules--TransformationRuntime_DurationMs",
+                    "formatter": 8,
+                    "formatOptions": {
+                      "palette": "greenRed"
+                    },
+                    "numberFormat": {
+                      "unit": 23,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "microsoft.insights/datacollectionrules--TransformationRuntime_DurationMs Timeline",
+                    "formatter": 5
+                  }
+                ],
+                "rowLimit": 10000,
+                "labelSettings": [
+                  {
+                    "columnId": "microsoft.insights/datacollectionrules--TransformationRuntime_DurationMs",
+                    "label": "Logs Transform Duration per Min (Average)"
+                  },
+                  {
+                    "columnId": "microsoft.insights/datacollectionrules--TransformationRuntime_DurationMs Timeline",
+                    "label": "Logs Transform Duration per Min Timeline"
+                  }
+                ]
+              }
+            },
+            "customWidth": "25",
+            "name": "metric - 3",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook00b53ea6-b3e4-44c7-8b00-c23507156146",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.insights/datacollectionrules",
+              "metricScope": 0,
+              "resourceParameter": "DataCollectionRule",
+              "resourceIds": [
+                "{DataCollectionRule}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 43200000
+              },
+              "timeGrain": "PT15M",
+              "metrics": [
+                {
+                  "namespace": "microsoft.insights/datacollectionrules",
+                  "metric": "microsoft.insights/datacollectionrules--RowsReceived_Count",
+                  "aggregation": 1
+                }
+              ],
+              "title": "Records Received by DCRs",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "75",
+            "name": "metric - 1",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureMetrics\r\n| where MetricName == \"RowsReceived_Count\"\r\n| summarize RowsReceived=sum(Total) by Name=tolower(Resource)\r\n| sort by RowsReceived desc",
+              "size": 0,
+              "title": "Rows Received (last hour)",
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Name",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "RowsReceived",
+                    "formatter": 3,
+                    "formatOptions": {
+                      "palette": "green",
+                      "compositeBarSettings": {
+                        "labelText": "",
+                        "columnSettings": []
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "customWidth": "25",
+            "name": "query - 4",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook89c5557a-7adb-42b7-b340-0179b18254a7",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.insights/datacollectionrules",
+              "metricScope": 0,
+              "resourceParameter": "DataCollectionRule",
+              "resourceIds": [
+                "{DataCollectionRule}"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 43200000
+              },
+              "timeGrain": "PT15M",
+              "metrics": [
+                {
+                  "namespace": "microsoft.insights/datacollectionrules",
+                  "metric": "microsoft.insights/datacollectionrules--RowsDropped_Count",
+                  "aggregation": 1
+                }
+              ],
+              "title": "Records Dropped by DCRs",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "75",
+            "name": "metric - 2",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureMetrics\r\n| where MetricName == \"RowsDropped_Count\"\r\n| summarize RowsDropped=sum(Total) by Name=tolower(Resource)\r\n| sort by RowsDropped desc\r\n",
+              "size": 0,
+              "title": "Rows Dropped (last hour)",
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "RowsDropped",
+                    "formatter": 8,
+                    "formatOptions": {
+                      "palette": "greenRed"
+                    }
+                  }
+                ]
+              }
+            },
+            "customWidth": "25",
+            "name": "query - 3",
+            "styleSettings": {
+              "showBorder": true
+            }
+          }
+        ]
+      },
+      "name": "group - 1"
+    }
+  ],
+  "fallbackResourceIds": [
+    "/subscriptions/57b9b795-cf3d-448d-b471-3a8aa05236bd/resourcegroups/rg-demo-sentinel-01/providers/microsoft.operationalinsights/workspaces/sentinel-demo-01"
+  ],
+  "fromTemplateId": "sentinel-UserWorkbook",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
