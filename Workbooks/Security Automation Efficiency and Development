@@ -1,0 +1,744 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+        {
+            "id": "02549b7f-a164-43f6-86ea-865cc2cc1132",
+            "type": 1,
+            "name": "text - 0",
+            "content": {
+                "json": "# Security Automation Efficiency and Development\r\n\r\n\r\n#### This workbook provides an overview of current SOAR operations in the environment in the first view, and the second view can be used to identify incidents that may be good candidates for further automation development.\r\n\r\n#### For reference, when operating the time range for the panes in the first tab, the first wave of SOAR playbooks, for the POC, were implemented <insert_date>\r\n\r\nThis workbook is provided as it.",
+                "style": "upsell"
+            }
+        },
+        {
+            "id": "35bb9c11-5597-451f-bb45-d398b9d48b2b",
+            "type": 11,
+            "name": "actions - 3",
+            "content": {
+                "version": "LinkItem/1.0",
+                "links": [
+                    {
+                        "id": "1321b178-1173-4292-8a8c-1979be8b15fd",
+                        "key": "1321b178-1173-4292-8a8c-1979be8b15fd",
+                        "cellValue": "tab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Automation Efficiency ",
+                        "subTarget": "1",
+                        "preText": "",
+                        "postText": "",
+                        "style": "link",
+                        "linkIsContextBlade": false
+                    },
+                    {
+                        "id": "0aea19a0-d63d-44d8-a2f5-f0d0b8bba7eb",
+                        "key": "0aea19a0-d63d-44d8-a2f5-f0d0b8bba7eb",
+                        "cellValue": "tab",
+                        "linkTarget": "parameter",
+                        "linkLabel": "Automation Development",
+                        "subTarget": "2",
+                        "preText": "",
+                        "postText": "",
+                        "style": "link",
+                        "linkIsContextBlade": false
+                    }
+                ],
+                "style": "tabs"
+            }
+        },
+        {
+            "id": "d580d026-95e0-43d3-be29-fd6db3955d0b",
+            "type": 12,
+            "name": "SOC Metrics - Before Automation",
+            "content": {
+                "version": "NotebookGroup/1.0",
+                "groupType": "editable",
+                "items": [
+                    {
+                        "id": "46faf6d2-7486-4be0-acc6-d21734146963",
+                        "type": 9,
+                        "name": "Time Range",
+                        "content": {
+                            "version": "KqlParameterItem/1.0",
+                            "parameters": [
+                                {
+                                    "id": "d333f05d-d3f2-44fc-a08d-b0bd60ffaf1e",
+                                    "key": "d333f05d-d3f2-44fc-a08d-b0bd60ffaf1e",
+                                    "name": "TimeRange",
+                                    "label": "Time Range",
+                                    "value": {
+                                        "durationMs": 2591999000,
+                                        "endTime": "2025-11-30T23:59:59.000Z"
+                                    },
+                                    "type": 4,
+                                    "isRequired": false,
+                                    "version": "",
+                                    "typeSettings": {
+                                        "selectableValues": [
+                                            {
+                                                "durationMs": 7776000000
+                                            },
+                                            {
+                                                "durationMs": 2592000000
+                                            },
+                                            {
+                                                "durationMs": 604800000
+                                            },
+                                            {
+                                                "durationMs": 86400000
+                                            },
+                                            {
+                                                "durationMs": 1800000
+                                            },
+                                            {
+                                                "durationMs": 3600000
+                                            }
+                                        ],
+                                        "allowCustom": true
+                                    }
+                                }
+                            ],
+                            "style": "pills"
+                        }
+                    },
+                    {
+                        "id": "dfe93275-05a9-4906-9379-452f24c5249a",
+                        "type": 3,
+                        "name": "Mean Time to Triage",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where FirstModifiedTime  >= {TimeRange:start} and FirstModifiedTime  <= {TimeRange:end}\r\n| summarize arg_max(LastModifiedTime,*) by IncidentNumber \r\n| extend TimeToTriage =  (FirstModifiedTime - CreatedTime)/1h\r\n| summarize AvgTTT=avg(TimeToTriage) ",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Mean Time to Triage (MTTT)",
+                            "timeContextFromParameter": "TimeRange",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "titleContent": {
+                                    "formatter": 1
+                                },
+                                "leftContent": {
+                                    "columnMatch": "AvgTTT",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 26,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": false,
+                                            "maximumFractionDigits": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "38e800b7-fee1-4fdc-9538-2aa30aa2b5cf",
+                        "type": 3,
+                        "name": "query - 1",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange:start} and CreatedTime <= {TimeRange:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber \r\n| where Status == \"Closed\"\r\n| extend TimeToClosure = (ClosedTime - CreatedTime)/1h\r\n| summarize AvgTTC=avg(TimeToClosure)",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Mean Time to Resolve (MTTR)",
+                            "timeContextFromParameter": "TimeRange",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "AvgTTC",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 26,
+                                        "options": {
+                                            "style": "decimal",
+                                            "maximumFractionDigits": 1
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "b1c2d3e4-aaaa-bbbb-cccc-333333333333",
+                        "type": 3,
+                        "name": "Total Incident Volume - Before",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange:start} and CreatedTime <= {TimeRange:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| summarize TotalIncidents=count()",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Total Incident Volume",
+                            "timeContextFromParameter": "TimeRange",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "TotalIncidents",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 17,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": true,
+                                            "maximumFractionDigits": 0
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "c2d3e4f5-aaaa-bbbb-cccc-444444444444",
+                        "type": 3,
+                        "name": "Closed Incident Volume - Before",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange:start} and CreatedTime <= {TimeRange:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| where Status == \"Closed\"\r\n| summarize ClosedIncidents=count()",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Closed Incidents",
+                            "timeContextFromParameter": "TimeRange",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "ClosedIncidents",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 17,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": true,
+                                            "maximumFractionDigits": 0
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "a1a1a1a1-1111-2222-3333-aaaaaaaaaaaa",
+                        "type": 3,
+                        "name": "Mean Time to Acknowledge - Before",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange:start} and CreatedTime <= {TimeRange:end}\r\n| where Status != \"New\"\r\n| summarize FirstAckTime=min(TimeGenerated) by IncidentNumber, CreatedTime\r\n| extend TimeToAcknowledge = (FirstAckTime - CreatedTime)/1h\r\n| summarize AvgMTTA=avg(TimeToAcknowledge)",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Mean Time to Acknowledge (MTTA)",
+                            "timeContextFromParameter": "TimeRange",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "AvgMTTA",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 26,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": false,
+                                            "maximumFractionDigits": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "b2b2b2b2-1111-2222-3333-bbbbbbbbbbbb",
+                        "type": 3,
+                        "name": "KPI Trend Over Time - Before",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange:start} and CreatedTime <= {TimeRange:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| extend TimeToTriage = (FirstModifiedTime - CreatedTime)/1h,\r\n         TimeToClosure = iff(Status == \"Closed\", (ClosedTime - CreatedTime)/1h, real(null))\r\n| summarize MTTT=avg(TimeToTriage), MTTR=avg(TimeToClosure) by bin(CreatedTime, 1d)\r\n| order by CreatedTime asc",
+                            "size": 0,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "MTTT & MTTR Trend Over Time",
+                            "timeContextFromParameter": "TimeRange",
+                            "visualization": "linechart",
+                            "chartSettings": {
+                                "xAxis": "CreatedTime",
+                                "yAxis": [
+                                    "MTTT",
+                                    "MTTR"
+                                ],
+                                "showLegend": true,
+                                "seriesLabelSettings": [
+                                    {
+                                        "seriesName": "MTTT",
+                                        "label": "Mean Time to Triage (hrs)"
+                                    },
+                                    {
+                                        "seriesName": "MTTR",
+                                        "label": "Mean Time to Resolve (hrs)"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "title": "Security KPI's Prior to SOAR Implementation",
+                "expandable": false
+            },
+            "conditionalVisibilities": [
+                {
+                    "parameterName": "tab",
+                    "comparison": "isEqualTo",
+                    "value": "1"
+                }
+            ],
+            "styleSettings": {
+                "showBorder": true,
+                "maxWidth": "50"
+            },
+            "customWidth": "50"
+        },
+        {
+            "id": "e1d8d277-a28e-4b91-a591-e8168390a1fd",
+            "type": 12,
+            "name": "Automation Development",
+            "content": {
+                "version": "NotebookGroup/1.0",
+                "groupType": "editable",
+                "items": [
+                    {
+                        "id": "b33ee18e-c6c5-4b8e-b7ab-e8c4d6f2f666",
+                        "type": 9,
+                        "name": "parameters - 1",
+                        "content": {
+                            "version": "KqlParameterItem/1.0",
+                            "parameters": [
+                                {
+                                    "id": "9286d8ae-21b2-46aa-996e-b199ec4757d4",
+                                    "key": "9286d8ae-21b2-46aa-996e-b199ec4757d4",
+                                    "name": "timeRange",
+                                    "label": "Time Range",
+                                    "value": {
+                                        "durationMs": 604800000
+                                    },
+                                    "type": 4,
+                                    "isRequired": false,
+                                    "version": "",
+                                    "typeSettings": {
+                                        "selectableValues": [
+                                            {
+                                                "durationMs": 86400000
+                                            },
+                                            {
+                                                "durationMs": 604800000
+                                            },
+                                            {
+                                                "durationMs": 2592000000
+                                            },
+                                            {
+                                                "durationMs": 7776000000
+                                            }
+                                        ],
+                                        "allowCustom": false
+                                    }
+                                }
+                            ],
+                            "style": "pills"
+                        }
+                    },
+                    {
+                        "id": "ca996186-85ad-45c3-a46d-610c36385da8",
+                        "type": 3,
+                        "name": "query - 0",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| summarize Count=count() by Title, Status\r\n| sort by Count desc",
+                            "size": 0,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "timeContextFromParameter": "timeRange",
+                            "title": "Incidents by Volume",
+                            "exportMultipleValues": true,
+                            "exportedParameters": [
+                                {
+                                    "parameterType": 1,
+                                    "fieldName": "Title",
+                                    "parameterName": "incidentName",
+                                    "quote": "\"",
+                                    "delimiter": ","
+                                }
+                            ]
+                        },
+                        "customWidth": "70"
+                    },
+                    {
+                        "id": "4aefc7c2-4265-4761-8c62-e10ae124930c",
+                        "type": 3,
+                        "name": "query - 2",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "let selectedIncidents = dynamic([{incidentName}]);\r\nSecurityIncident\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| where Status == \"Closed\"\r\n| where array_length(selectedIncidents) == 0\r\n    or Title in (selectedIncidents)\r\n| extend Closure = iff(isempty(Classification), \"None\", Classification)\r\n| summarize IncCount=count() by Closure",
+                            "size": 0,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Closure by Classification",
+                            "visualization": "piechart",
+                            "exportedParameters": [
+                                {
+                                    "parameterType": 1,
+                                    "fieldName": "Closure",
+                                    "parameterName": "closure"
+                                }
+                            ],
+                            "timeContextFromParameter": "timeRange"
+                        },
+                        "customWidth": "30"
+                    },
+                    {
+                        "id": "7adc06c1-2ed1-467a-80cb-7c1362becb3d",
+                        "type": 3,
+                        "name": "query - 3",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "let selectedIncidents = dynamic([{incidentName}]);\r\nlet selectedClosures  = dynamic([{closure}]);\r\nSecurityIncident\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| where Status == \"Closed\"\r\n| where array_length(selectedIncidents) == 0\r\n    or Title in (selectedIncidents)\r\n| where array_length(selectedClosures) == 0\r\n    or Classification in (selectedClosures)\r\n| extend TimeToClosure = iff(isnotempty(ClosedTime), round((ClosedTime - CreatedTime)/1h, 2), real(null))\r\n| project\r\n    IncidentNumber,\r\n    Title,\r\n    Severity,\r\n    Status,\r\n    Classification,\r\n    ClassificationComment,\r\n    TimeToClosure,\r\n    Owner.userPrincipalName,\r\n    CreatedTime,\r\n    ClosedTime\r\n| order by CreatedTime desc",
+                            "size": 0,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "timeContextFromParameter": "timeRange",
+                            "title": "Incident Closure Information",
+                            "showExportToExcel": true,
+                            "exportToExcelOptions": "visible"
+                        }
+                    },
+                    {
+                        "id": "e5e5e5e5-1111-2222-3333-eeeeeeeeeeee",
+                        "type": 3,
+                        "name": "Repetitive Incidents by Avg Handle Time",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "let selectedIncidents = dynamic([{incidentName}]);\r\nSecurityIncident\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| where Status == \"Closed\"\r\n| where array_length(selectedIncidents) == 0\r\n    or Title in (selectedIncidents)\r\n| extend HandleTime = round((ClosedTime - CreatedTime)/1h, 2)\r\n| summarize\r\n    IncidentCount=count(),\r\n    AvgHandleTime=round(avg(HandleTime), 2),\r\n    MedianHandleTime=round(percentile(HandleTime, 50), 2),\r\n    MinHandleTime=round(min(HandleTime), 2),\r\n    MaxHandleTime=round(max(HandleTime), 2)\r\n    by Title\r\n| where IncidentCount >= 3\r\n| extend AutomationScore = round(toreal(IncidentCount) / AvgHandleTime, 2)\r\n| sort by AutomationScore desc",
+                            "size": 0,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "timeContextFromParameter": "timeRange",
+                            "title": "Automation Candidates — High Volume, Low Handle Time",
+                            "showExportToExcel": true,
+                            "exportToExcelOptions": "visible"
+                        }
+                    }
+                ]
+            },
+            "conditionalVisibilities": [
+                {
+                    "parameterName": "tab",
+                    "comparison": "isEqualTo",
+                    "value": "2"
+                }
+            ]
+        },
+        {
+            "id": "6412092e-8f58-4cdf-ad20-50d77493e008",
+            "type": 12,
+            "name": "SOC Metrics - After Automation",
+            "content": {
+                "version": "NotebookGroup/1.0",
+                "groupType": "editable",
+                "items": [
+                    {
+                        "id": "39b591f6-2768-49e6-9718-be5fa6f8bc91",
+                        "type": 9,
+                        "name": "Time Range",
+                        "content": {
+                            "version": "KqlParameterItem/1.0",
+                            "parameters": [
+                                {
+                                    "id": "e20188f0-7bf9-462f-aeb8-94bbfcf43b31",
+                                    "key": "e20188f0-7bf9-462f-aeb8-94bbfcf43b31",
+                                    "name": "TimeRange2",
+                                    "label": "Time Range",
+                                    "value": {
+                                        "durationMs": 2678399000,
+                                        "endTime": "2025-12-31T23:59:59.000Z"
+                                    },
+                                    "type": 4,
+                                    "isRequired": false,
+                                    "version": "",
+                                    "typeSettings": {
+                                        "selectableValues": [
+                                            {
+                                                "durationMs": 7776000000
+                                            },
+                                            {
+                                                "durationMs": 2592000000
+                                            },
+                                            {
+                                                "durationMs": 604800000
+                                            },
+                                            {
+                                                "durationMs": 86400000
+                                            },
+                                            {
+                                                "durationMs": 1800000
+                                            },
+                                            {
+                                                "durationMs": 3600000
+                                            }
+                                        ],
+                                        "allowCustom": true
+                                    }
+                                }
+                            ],
+                            "style": "pills"
+                        }
+                    },
+                    {
+                        "id": "140354c2-1fe6-40e9-b8d1-af77a38d5d47",
+                        "type": 3,
+                        "name": "Mean Time to Triage",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where FirstModifiedTime  >= {TimeRange2:start} and FirstModifiedTime  <= {TimeRange2:end}\r\n| summarize arg_max(LastModifiedTime,*) by IncidentNumber \r\n| extend TimeToTriage =  (FirstModifiedTime - CreatedTime)/1h\r\n| summarize AvgTTT=avg(TimeToTriage) ",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Mean Time to Triage (MTTT)",
+                            "timeContextFromParameter": "TimeRange2",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "titleContent": {
+                                    "formatter": 1
+                                },
+                                "leftContent": {
+                                    "columnMatch": "AvgTTT",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 26,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": false,
+                                            "maximumFractionDigits": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "36fee1ec-6a44-45b5-b2d2-3df93feebce5",
+                        "type": 3,
+                        "name": "query - 1",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange2:start} and CreatedTime <= {TimeRange2:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber \r\n| where Status == \"Closed\"\r\n| extend TimeToClosure = (ClosedTime - CreatedTime)/1h\r\n| summarize AvgTTC=avg(TimeToClosure)",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Mean Time to Resolve (MTTR)",
+                            "timeContextFromParameter": "TimeRange2",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "AvgTTC",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 26,
+                                        "options": {
+                                            "style": "decimal",
+                                            "maximumFractionDigits": 1
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "d3e4f5a6-aaaa-bbbb-cccc-555555555555",
+                        "type": 3,
+                        "name": "Total Incident Volume - After",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange2:start} and CreatedTime <= {TimeRange2:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| summarize TotalIncidents=count()",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Total Incident Volume",
+                            "timeContextFromParameter": "TimeRange2",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "TotalIncidents",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 17,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": true,
+                                            "maximumFractionDigits": 0
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "e4f5a6b7-aaaa-bbbb-cccc-666666666666",
+                        "type": 3,
+                        "name": "Closed Incident Volume - After",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange2:start} and CreatedTime <= {TimeRange2:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| where Status == \"Closed\"\r\n| summarize ClosedIncidents=count()",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Closed Incidents",
+                            "timeContextFromParameter": "TimeRange2",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "ClosedIncidents",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 17,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": true,
+                                            "maximumFractionDigits": 0
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "c3c3c3c3-1111-2222-3333-cccccccccccc",
+                        "type": 3,
+                        "name": "Mean Time to Acknowledge - After",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange2:start} and CreatedTime <= {TimeRange2:end}\r\n| where Status != \"New\"\r\n| summarize FirstAckTime=min(TimeGenerated) by IncidentNumber, CreatedTime\r\n| extend TimeToAcknowledge = (FirstAckTime - CreatedTime)/1h\r\n| summarize AvgMTTA=avg(TimeToAcknowledge)",
+                            "size": 4,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "Mean Time to Acknowledge (MTTA)",
+                            "timeContextFromParameter": "TimeRange2",
+                            "visualization": "tiles",
+                            "tileSettings": {
+                                "leftContent": {
+                                    "columnMatch": "AvgMTTA",
+                                    "formatter": 12,
+                                    "formatOptions": {
+                                        "palette": "auto"
+                                    },
+                                    "numberFormat": {
+                                        "unit": 26,
+                                        "options": {
+                                            "style": "decimal",
+                                            "useGrouping": false,
+                                            "maximumFractionDigits": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "customWidth": "50"
+                        },
+                        "customWidth": "50"
+                    },
+                    {
+                        "id": "d4d4d4d4-1111-2222-3333-dddddddddddd",
+                        "type": 3,
+                        "name": "KPI Trend Over Time - After",
+                        "content": {
+                            "version": "KqlItem/1.0",
+                            "query": "SecurityIncident\r\n| where CreatedTime >= {TimeRange2:start} and CreatedTime <= {TimeRange2:end}\r\n| summarize arg_max(TimeGenerated,*) by IncidentNumber\r\n| extend TimeToTriage = (FirstModifiedTime - CreatedTime)/1h,\r\n         TimeToClosure = iff(Status == \"Closed\", (ClosedTime - CreatedTime)/1h, real(null))\r\n| summarize MTTT=avg(TimeToTriage), MTTR=avg(TimeToClosure) by bin(CreatedTime, 1d)\r\n| order by CreatedTime asc",
+                            "size": 0,
+                            "queryType": 0,
+                            "resourceType": "microsoft.operationalinsights/workspaces",
+                            "title": "MTTT & MTTR Trend Over Time",
+                            "timeContextFromParameter": "TimeRange2",
+                            "visualization": "linechart",
+                            "chartSettings": {
+                                "xAxis": "CreatedTime",
+                                "yAxis": [
+                                    "MTTT",
+                                    "MTTR"
+                                ],
+                                "showLegend": true,
+                                "seriesLabelSettings": [
+                                    {
+                                        "seriesName": "MTTT",
+                                        "label": "Mean Time to Triage (hrs)"
+                                    },
+                                    {
+                                        "seriesName": "MTTR",
+                                        "label": "Mean Time to Resolve (hrs)"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "title": "Security KPI's After SOAR Implementation"
+            },
+            "conditionalVisibilities": [
+                {
+                    "parameterName": "tab",
+                    "comparison": "isEqualTo",
+                    "value": "1"
+                }
+            ],
+            "styleSettings": {
+                "showBorder": true,
+                "maxWidth": "50"
+            },
+            "customWidth": "50"
+        }
+    ],
+    "isLocked": false,
+    "styleSettings": {},
+    "fromTemplateId": "sentinel-SOARDevelopment",
+    "fallbackResourceIds": [
+        "sentinel"
+    ]
+}
