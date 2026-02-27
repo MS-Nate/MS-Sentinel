@@ -1,2 +1,2 @@
 # MS-Sentinel
-Hello. Welcome to my new Sentinel repo. This repo is public and focused on my personal Sentinel development work. Any code or IaC templates are provided as is.
+Hello. Welcome to my new Sentinel repo. This repo is public and focused on my personal Sentinel development work. Any code or IaC templates are provided as is. These projects are personal contributiona and are not official Microsoft product(s).
